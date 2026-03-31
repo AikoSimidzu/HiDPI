@@ -12,13 +12,14 @@
 
 Достаточно открыть, изменить и сохранить сам конфиг.
 
+Все конфиги находятся в папке configs.
 
-Текущий конфиг может не работать, это лишь пример.
-
-Для работы программы необходим [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) 
+** Для работы программы необходим [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) **
 
 # Ресурсы
 ## Движок
 [Zapret2 BOL-VAN](https://github.com/bol-van/zapret2)
 ## Конфиги
 [DISCORDYOUTUBE](https://github.com/youtubediscord/zapret2-youtube-discord/tree/main/presets)
+
+*Переписаны с помощью нейронки
