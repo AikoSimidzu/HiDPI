@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>HiDPI.ico</ApplicationIcon>
+    <UseWindowsForms>False</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\donate.png" />
+    <None Remove="Resources\files.png" />
+    <None Remove="Resources\HiDPI.ico" />
+    <None Remove="Resources\senkoMain.png" />
+    <None Remove="Resources\senkoThx.jpg" />
+    <None Remove="Resources\senkoThx.png" />
+    <None Remove="Resources\setting.png" />
+    <None Remove="Resources\technology.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HiDPI.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.2-dev.8" />
+    <PackageReference Include="TaskScheduler" Version="2.12.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\donate.png" />
+    <Resource Include="Resources\files.png" />
+    <Resource Include="Resources\HiDPI.ico" />
+    <Resource Include="Resources\senkoMain.png" />
+    <Resource Include="Resources\senkoThx.png" />
+    <Resource Include="Resources\setting.png" />
+    <Resource Include="Resources\technology.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="HiDPI.ConnectionsForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HiDPI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="#121111"
+             Loaded="UserControl_Loaded">
+
+    <Grid RowDefinitions="5, *, 5" ColumnDefinitions="20, 220, *">
+        <ListBox x:Name="Configs" Background="#121111" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding DataContext.SelectedConfig, RelativeSource={RelativeSource AncestorType=Window }, Mode=TwoWay}" ItemsSource="{Binding DataContext.Configs, RelativeSource={RelativeSource AncestorType=Window }}" SelectionMode="Single" DisplayMemberPath="Name"/>
+
+        <Grid RowDefinitions="30, 30, *" Grid.Row="1" Grid.Column="2">
+            <Label Foreground="White" FontSize="14" Content="{Binding DataContext.Status, RelativeSource={RelativeSource AncestorType=Window }}"/>
+            <Label Grid.Row="1" Foreground="White" FontSize="14" Content="{Binding DataContext.UsedConfig, RelativeSource={RelativeSource AncestorType=Window }}"/>
+
+            <Grid ColumnDefinitions="10, *, 10" Grid.Row="2">
+                <Button x:Name="Start" Command="{Binding DataContext.StartZapret, RelativeSource={RelativeSource AncestorType=Window }}" FontSize="15" FontWeight="DemiBold" Margin="0 0 0 90" Content="Запуск" Grid.Column="1" Height="40" Width=" 220"/>
+                <Button x:Name="Restart" Command="{Binding DataContext.RestartZapret, RelativeSource={RelativeSource AncestorType=Window }}" FontSize="15" FontWeight="DemiBold" Content="Перезапустить" Grid.Column="1" Height="40" Width=" 220"/>
+                <Button x:Name="Stop" Command="{Binding DataContext.StopZapret, RelativeSource={RelativeSource AncestorType=Window }}" FontSize="15" FontWeight="DemiBold" Margin="0 90 0 0" Content="Стоп" Grid.Column="1" Height="40" Width=" 220"/>
+            </Grid>
+        </Grid>        
+    </Grid>
+</UserControl>

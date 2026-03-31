@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="HiDPI.logsForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HiDPI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="UserControl_Loaded"
+             Background="#01FFFFFF">
+
+    <Grid RowDefinitions="*, 40">
+        <ListBox x:Name="LogList" Background="#121111" ItemsSource="{Binding DataContext.Logs, RelativeSource={RelativeSource AncestorType=Window }}" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBlock Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" Foreground="Gray" Margin="0,0,8,0" FontSize="11"/>
+                        <TextBlock Text="{Binding Text}" x:Name="TxtBlock">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="Error">
+                                            <Setter Property="Foreground" Value="#FF6B6B"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Type}" Value="System">
+                                            <Setter Property="Foreground" Value="#4EC9B0"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <Button Grid.Row="1" Width="200" Click="Button_Click" Height="30" Content="Сохранить" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>

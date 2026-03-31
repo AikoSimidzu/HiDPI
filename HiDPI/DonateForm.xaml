@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="HiDPI.DonateForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HiDPI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="#01FFFFFF">
+    
+    <Grid RowDefinitions="*, 50, 30">
+        <Image x:Name="image" Source="/Resources/senkoMain.png"/>
+        <Image x:Name="imageThx" Source="/Resources/senkoThx.png" Visibility="Hidden"/>
+        <Button x:Name="donate" Click="donate_Click" Width="250" Height="35" FontWeight="Bold" FontSize="15" Content="Донатик" Grid.Row="1"/>
+    </Grid>
+</UserControl>
