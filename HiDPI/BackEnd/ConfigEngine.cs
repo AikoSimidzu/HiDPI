@@ -7,12 +7,12 @@
     internal class ConfigEngine
     {
         private string appCfgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AppConfig.cfg");
-        public ConfigEngine() 
+        public ConfigEngine()
         { }
 
         public AppConfig LoadConfig()
         {
-            AppConfig _appConfig = new() { AutoConnect = false, StartUpWithSystem = false, AutoRestartIfError = false,  LastConfig = new ConfigInfo { Name = string.Empty, ConfigPath = string.Empty } };
+            AppConfig _appConfig = new() { AutoConnect = false, StartUpWithSystem = false, AutoRestartIfError = false, LastConfig = new ConfigInfo { Name = string.Empty, ConfigPath = string.Empty } };
             if (File.Exists(appCfgPath))
             {
                 string config = File.ReadAllText(appCfgPath);

@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Windows;
+    using Microsoft.Toolkit.Uwp.Notifications;
     using Microsoft.Win32.TaskScheduler;
 
     internal class Helper
@@ -13,6 +15,25 @@
             return await Network.GET_REQUEST("https://raw.githubusercontent.com/AikoSimidzu/HiDPI/refs/heads/main/CurrentVersion");
         }
 
+        public static void ShowMessage(string Text, string Text2 = "", string Header = "")
+        {
+            new ToastContentBuilder().AddText("HiDPI " + Header).AddText(Text).AddText(Text2)
+            .AddAppLogoOverride(new Uri($"file:///{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "hidpi.png")}"), ToastGenericAppLogoCrop.Default).Show();
+        }
+
+        public static void CheckDriver()
+        {
+            foreach (var proc in Process.GetProcesses())
+            {
+                if (proc.ProcessName == "winws2" || proc.ProcessName == "winws")
+                {
+                    proc.Kill();
+                    break;
+                }
+            }
+        }
+
+        #region Конфиги
         private static FileSystemWatcher _watcher;
         public static ObservableCollection<ConfigInfo> Configs { get; } = new ObservableCollection<ConfigInfo>();
         private static string cfgDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs");
@@ -59,12 +80,14 @@
                     Configs.Add(new ConfigInfo
                     {
                         ConfigPath = file,
-                        Name = Path.GetFileName(file)
+                        Name = Path.GetFileNameWithoutExtension(file)
                     });
                 }
             }
         }
+        #endregion
 
+        #region Автозапуск
         public static void RegisterTask()
         {
             using (TaskService ts = new TaskService())
@@ -86,5 +109,6 @@
                 ts.RootFolder.DeleteTask("HiDPIAutoStart", exceptionOnNotExists: false);
             }
         }
+        #endregion
     }
 }

@@ -115,7 +115,7 @@
                 _winwsProcess.BeginErrorReadLine();
             }
             catch (Exception ex)
-            {   
+            {
                 Log($"[ОШИБКА] {ex.Message}");
             }
         }
@@ -125,7 +125,7 @@
             if (_winwsProcess != null && !_winwsProcess.HasExited)
             {
                 _winwsProcess.Kill();
-                _winwsProcess.WaitForExit(2000);
+                _winwsProcess.WaitForExit(200);
                 _winwsProcess.Dispose();
                 _winwsProcess = null;
                 Log("[СИСТЕМА] Процесс остановлен.\n");

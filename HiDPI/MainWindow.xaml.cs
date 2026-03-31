@@ -1,10 +1,8 @@
 ﻿namespace HiDPI
 {
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Interop;
-    using System.Windows.Media;
     using HiDPI.BackEnd;
 
     public partial class MainWindow : Window
@@ -13,9 +11,16 @@
         {
             InitializeComponent();
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Helper.InitializeConfigMonitoring();
+            
+            string _actualVersion = await Helper.GetActualVersion();
+            if (InternalData.CurrentVersion != _actualVersion)
+            {
+                Helper.ShowMessage("Требуется обновление!", "Актуальная версия: " + _actualVersion, "Обновление");
+            }
         }
 
         #region Кнопки
@@ -50,7 +55,7 @@
         private void MenuExit_Click(object sender, RoutedEventArgs e)
         {
             RefreshVisibility(true);
-            Application.Current.Shutdown();
+            Environment.Exit(0);
         }
 
         private void HiDPIIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)

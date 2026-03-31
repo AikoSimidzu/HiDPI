@@ -11,7 +11,7 @@
             {
                 using (HttpClient hc = new HttpClient(handler))
                 {
-                    return await hc.GetStringAsync(new Uri(URL));                    
+                    return await hc.GetStringAsync(new Uri(URL));
                 }
             }
         }

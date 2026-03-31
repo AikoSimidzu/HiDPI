@@ -43,6 +43,7 @@
         public RelayCommand SetAutoRestartIfError { get; set; }
         #endregion
 
+        #region Обновление UI и переменные
         private object? _currentView;
         public object? CurrentView
         {
@@ -91,12 +92,13 @@
         public bool AutoRestartIfError
         {
             get { return _autoRestartIfError; }
-            set 
+            set
             {
                 _autoRestartIfError = value;
                 OnPropertyChanged(nameof(AutoRestartIfError));
             }
         }
+        #endregion
 
         ZapretController controller = new("");
         ConfigEngine configEngine = new();
@@ -108,17 +110,17 @@
             _autoStartUp = appConfig.StartUpWithSystem;
             _autoRestartIfError = appConfig.AutoRestartIfError;
 
-            SetStartUp = new RelayCommand(o => 
+            SetStartUp = new RelayCommand(o =>
             {
                 configEngine.SetStartUpWithSystem(AutoStartUp, appConfig);
             });
 
-            SetAutoRestartIfError = new RelayCommand(o => 
+            SetAutoRestartIfError = new RelayCommand(o =>
             {
                 configEngine.SetAutoRestartIfError(AutoRestartIfError, appConfig);
             });
 
-            SetAutoConnect = new RelayCommand(o => 
+            SetAutoConnect = new RelayCommand(o =>
             {
                 if (_selectedConfig != null && _selectedConfig.ConfigPath.Length > 0)
                 {
@@ -146,13 +148,19 @@
             LogsVM = new LogsViewModel();
             SettingsVM = new SettingsViewModel();
             DonateVM = new DonateViewModel();
-            
+
             CurrentView = ConnectionsVM;
 
             Configs = Helper.Configs;
 
             StartZapret = new RelayCommand(o =>
             {
+                Helper.CheckDriver();
+                if (controller.IsRunning)
+                {
+                    controller.Stop();
+                }
+
                 if (_selectedConfig != null && _selectedConfig.ConfigPath.Length > 0)
                 {
                     if (appConfig.AutoConnect)
@@ -165,26 +173,31 @@
                     controller.OnLogReceived += (msg) => AddLogEntry(msg);
                     controller.Start();
                     CurrentStatus = "Запущено";
+                    Helper.ShowMessage($"Конфиг запущен!", _selectedConfig.Name, "Запуск движка");
                 }
             });
 
-            StopZapret = new RelayCommand(o => 
-            {
-                if(controller.IsRunning)
-                {  
-                    controller.Stop();
-                    CurrentStatus = "Остановлено";
-                }
-            });
-
-            RestartZapret = new RelayCommand(o => 
+            StopZapret = new RelayCommand(o =>
             {
                 if (controller.IsRunning)
                 {
+                    controller.Stop();
+                    CurrentStatus = "Остановлено";
+                    Helper.ShowMessage("Конфиг остановлен!", Header: "Остановка движка");
+                }
+            });
+
+            RestartZapret = new RelayCommand(o =>
+            {
+                if (controller.IsRunning)
+                {
+                    Helper.ShowMessage("Перезагрузка конфига!");
                     CurrentStatus = "Перезагрузка...";
                     controller.Stop();
+                    Helper.CheckDriver();
                     controller.Start();
                     CurrentStatus = "Запущено";
+                    Helper.ShowMessage("Конфиг перезапущен!");
                 }
             });
 
@@ -213,14 +226,13 @@
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                //cannot apply dupsid tls mod. payload is not valid tls.
                 string type = "Info";
                 if (message.Contains("[ОШИБКА]") || message.Contains("cannot apply dupsid tls mod. payload is not valid tls."))
                 {
                     type = "Error";
                 }
                 else if (message.Contains("[СИСТЕМА]") || message.Contains("[СТАРТ]"))
-                { 
+                {
                     type = "System";
                 }
 
