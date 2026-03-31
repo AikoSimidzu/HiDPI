@@ -1,8 +1,12 @@
 # HiDPI
 Анти DPI с zapret2
 
-Тестовая версия.
-Конфиг менять в zapret2 -> config.txt
+![alt text](Screenshots/hidpi.png "Logo")
+
+# Скрины
+![alt text](Screenshots/Screen1.png "Main")
+![alt text](Screenshots/Screen2.png "Logs")
+![alt text](Screenshots/Screen3.png "Settings")
 
 Перезапускать HiDPI при изменении конфига- не нужно, всё происходит автоматически.
 
