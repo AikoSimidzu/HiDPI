@@ -26,7 +26,7 @@
 
         private async void Update_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.Combine(Environment.CurrentDirectory, "Updater.exe"), _actualVersion);
+            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Updater.exe"), _actualVersion);
             Environment.Exit(10);
         }
     }
