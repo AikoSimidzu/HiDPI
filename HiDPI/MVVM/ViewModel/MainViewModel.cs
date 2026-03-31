@@ -40,6 +40,7 @@
         public RelayCommand RestartZapret { get; set; }
         public RelayCommand SetStartUp { get; set; }
         public RelayCommand SetAutoConnect { get; set; }
+        public RelayCommand SetAutoRestartIfError { get; set; }
         #endregion
 
         private object? _currentView;
@@ -86,6 +87,17 @@
             }
         }
 
+        private bool _autoRestartIfError;
+        public bool AutoRestartIfError
+        {
+            get { return _autoRestartIfError; }
+            set 
+            {
+                _autoRestartIfError = value;
+                OnPropertyChanged(nameof(AutoRestartIfError));
+            }
+        }
+
         ZapretController controller = new("");
         ConfigEngine configEngine = new();
         public MainViewModel()
@@ -94,10 +106,16 @@
             appConfig = configEngine.LoadConfig();
             _autoConnect = appConfig.AutoConnect;
             _autoStartUp = appConfig.StartUpWithSystem;
+            _autoRestartIfError = appConfig.AutoRestartIfError;
 
             SetStartUp = new RelayCommand(o => 
             {
                 configEngine.SetStartUpWithSystem(AutoStartUp, appConfig);
+            });
+
+            SetAutoRestartIfError = new RelayCommand(o => 
+            {
+                configEngine.SetAutoRestartIfError(AutoRestartIfError, appConfig);
             });
 
             SetAutoConnect = new RelayCommand(o => 
@@ -195,9 +213,16 @@
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                //cannot apply dupsid tls mod. payload is not valid tls.
                 string type = "Info";
-                if (message.Contains("[ОШИБКА]")) type = "Error";
-                else if (message.Contains("[СИСТЕМА]") || message.Contains("[СТАРТ]")) type = "System";
+                if (message.Contains("[ОШИБКА]") || message.Contains("cannot apply dupsid tls mod. payload is not valid tls."))
+                {
+                    type = "Error";
+                }
+                else if (message.Contains("[СИСТЕМА]") || message.Contains("[СТАРТ]"))
+                { 
+                    type = "System";
+                }
 
                 Logs.Add(new LogMessage
                 {
@@ -205,6 +230,15 @@
                     Time = DateTime.Now,
                     Type = type
                 });
+
+                if (AutoRestartIfError && type == "Error")
+                {
+                    CurrentStatus = "Перезагрузка...";
+                    controller.Stop();
+                    controller.Start();
+                    CurrentStatus = "Запущено";
+                }
+
                 if (Logs.Count > 200) Logs.RemoveAt(0);
             });
         }

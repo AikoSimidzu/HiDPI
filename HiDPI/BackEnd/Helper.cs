@@ -70,7 +70,7 @@
             using (TaskService ts = new TaskService())
             {
                 TaskDefinition td = ts.NewTask();
-                td.RegistrationInfo.Description = "HiDPI (Ani zapret2)";
+                td.RegistrationInfo.Description = "HiDPI (Anti zapret2)";
                 td.Principal.RunLevel = TaskRunLevel.Highest;
                 td.Triggers.Add(new LogonTrigger());
                 td.Actions.Add(new ExecAction(AppDomain.CurrentDomain.BaseDirectory + "HiDPI.exe"));

@@ -12,7 +12,7 @@
 
         public AppConfig LoadConfig()
         {
-            AppConfig _appConfig = new() { AutoConnect = false, StartUpWithSystem = false, LastConfig = new ConfigInfo { Name = string.Empty, ConfigPath = string.Empty } };
+            AppConfig _appConfig = new() { AutoConnect = false, StartUpWithSystem = false, AutoRestartIfError = false,  LastConfig = new ConfigInfo { Name = string.Empty, ConfigPath = string.Empty } };
             if (File.Exists(appCfgPath))
             {
                 string config = File.ReadAllText(appCfgPath);
@@ -43,6 +43,12 @@
         {
             config.AutoConnect = p;
             config.LastConfig = path;
+            Save(config);
+        }
+
+        public void SetAutoRestartIfError(bool p, AppConfig config)
+        {
+            config.AutoRestartIfError = p;
             Save(config);
         }
 

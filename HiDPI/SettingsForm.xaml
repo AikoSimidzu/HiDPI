@@ -16,6 +16,9 @@
         <Label Grid.Row="1" Content="Подключаться автоматически" Foreground="White" FontSize="13"/>
         <CheckBox Grid.Row="1" Command="{Binding DataContext.SetAutoConnect, RelativeSource={RelativeSource AncestorType=Window }}" IsChecked="{Binding DataContext.AutoConnect, RelativeSource={RelativeSource AncestorType=Window }}" Width="50" Margin="180 0 0 0" Foreground="White"/>
 
+        <Label Grid.Row="2" Content="Автоматически перезапускать Zapret2 при ошибках" Foreground="White" Grid.ColumnSpan="2" FontSize="13"/>
+        <CheckBox Grid.Row="2" Command="{Binding DataContext.SetAutoRestartIfError, RelativeSource={RelativeSource AncestorType=Window }}" IsChecked="{Binding DataContext.AutoRestartIfError, RelativeSource={RelativeSource AncestorType=Window }}" Grid.Column="1" Width="50" Foreground="White" Margin="0 0 50 0"/>
+
         <Label x:Name="VersionNow" Grid.Row="4" Foreground="White" FontSize="15" FontWeight="DemiBold" Content="Текущая версия: "/>
         <Label x:Name="ActualVersion" Grid.Row="4" Foreground="White" FontSize="15" FontWeight="DemiBold" Grid.Column="1" Content="Актуальная версия: "/>
         <Button x:Name="Update" Click="Update_Click" Grid.Row="4" Grid.Column="2" Content="Обновить" FontSize="15" FontWeight="DemiBold" Width="200" Height="40"/>

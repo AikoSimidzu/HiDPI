@@ -17,6 +17,7 @@
     {
         public bool StartUpWithSystem { get; set; } = false;
         public bool AutoConnect { get; set; } = false;
+        public bool AutoRestartIfError { get; set; } = false;
         public ConfigInfo? LastConfig { get; set; }
     }
 }
