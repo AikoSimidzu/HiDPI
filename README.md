@@ -6,7 +6,8 @@
 # Скрины
 ![alt text](Screenshots/Screen1.png "Main")
 ![alt text](Screenshots/Screen2.png "Logs")
-![alt text](Screenshots/Screen3.png "Settings")
+![alt text](Screenshots/Screen3.png "Telegram")
+![alt text](Screenshots/Screen4.png "Settings")
 
 Перезапускать HiDPI при изменении конфига- не нужно, всё происходит автоматически.
 
