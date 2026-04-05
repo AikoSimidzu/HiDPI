@@ -20,6 +20,7 @@
     <None Remove="Resources\senkoThx.png" />
     <None Remove="Resources\setting.png" />
     <None Remove="Resources\technology.png" />
+    <None Remove="Resources\telegram.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,7 @@
     <Resource Include="Resources\senkoThx.png" />
     <Resource Include="Resources\setting.png" />
     <Resource Include="Resources\technology.png" />
+    <Resource Include="Resources\telegram.png" />
   </ItemGroup>
 
   <ItemGroup>

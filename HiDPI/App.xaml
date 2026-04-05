@@ -15,12 +15,16 @@
                 <local:logsForm/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
-                <local:SettingsForm/>
+            <DataTemplate DataType="{x:Type viewModel:TGProxyViewModel}">
+                <local:TGProxyForm/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewModel:DonateViewModel}">
                 <local:DonateForm/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+                <local:SettingsForm/>
             </DataTemplate>
 
             <ResourceDictionary.MergedDictionaries>

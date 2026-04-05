@@ -1,8 +1,11 @@
 ﻿namespace HiDPI.MVVM.ViewModel
 {
     using System.Collections.ObjectModel;
+    using System.Net;
+    using System.Net.Sockets;
     using System.Windows;
     using HiDPI.BackEnd;
+    using HiDPI.BackEnd.TG;
     using HiDPI.MVVM.Core;
 
     class MainViewModel : ObservableObject
@@ -10,6 +13,9 @@
         #region Бинды
         public ObservableCollection<LogMessage> Logs { get; } = new ObservableCollection<LogMessage>();
         public ObservableCollection<ConfigInfo> Configs { get; set; }
+
+        private readonly ITcpServerService _proxyService;
+        private CancellationTokenSource _cancellationTokenSource;
 
         private string runnedConfig { get; set; }
         public string Status
@@ -27,20 +33,30 @@
         public RelayCommand LogsVC { get; set; }
         public RelayCommand SettingsVC { get; set; }
         public RelayCommand DonateVC { get; set; }
+        public RelayCommand TGProxyVC { get; set; }
 
         public ConnectionsViewModel ConnectionsVM { get; set; }
         public LogsViewModel LogsVM { get; set; }
         public SettingsViewModel SettingsVM { get; set; }
         public DonateViewModel DonateVM { get; set; }
+        public TGProxyViewModel TGProxyVM { get; set; }
         #endregion
 
         #region Команды
+        public RelayCommand SetStartUp { get; set; }
+        #region Zapret
         public RelayCommand StartZapret { get; set; }
         public RelayCommand StopZapret { get; set; }
         public RelayCommand RestartZapret { get; set; }
-        public RelayCommand SetStartUp { get; set; }
         public RelayCommand SetAutoConnect { get; set; }
         public RelayCommand SetAutoRestartIfError { get; set; }
+        #endregion
+
+        #region TG
+        public RelayCommand SetAutoStartTGProxy { get; set; }
+        public RelayCommand StartTgProxy { get; set; }
+        public RelayCommand StopTgProxy { get; set; }
+        #endregion
         #endregion
 
         #region Обновление UI и переменные
@@ -65,11 +81,12 @@
             set { _currentStatus = value; OnPropertyChanged(nameof(Status)); OnPropertyChanged(nameof(CurrentStatus)); }
         }
 
+        #region Переменные
         private AppConfig appConfig;
         private bool _autoStartUp;
         public bool AutoStartUp
         {
-            get { return _autoStartUp; }
+            get => _autoStartUp;
             set
             {
                 _autoStartUp = value;
@@ -80,7 +97,7 @@
         private bool _autoConnect;
         public bool AutoConnect
         {
-            get { return _autoConnect; }
+            get => _autoConnect;
             set
             {
                 _autoConnect = value;
@@ -91,24 +108,52 @@
         private bool _autoRestartIfError;
         public bool AutoRestartIfError
         {
-            get { return _autoRestartIfError; }
+            get => _autoRestartIfError;
             set
             {
                 _autoRestartIfError = value;
                 OnPropertyChanged(nameof(AutoRestartIfError));
             }
         }
+
+        private bool _tgProxyAutoStart;
+        public bool TgProxyAutoStart
+        {
+            get => _tgProxyAutoStart;
+            set 
+            {
+                _tgProxyAutoStart = value;
+                OnPropertyChanged(nameof(TgProxyAutoStart));
+            }
+        }
+
+        private string _tgProxyIsStart = "Статус: Прокси не запущен";
+        private bool _tgProxyIsStartBool = false;
+        public string TgProxyIsStart
+        {
+            get => _tgProxyIsStart;
+            set
+            {
+                _tgProxyIsStart = value;
+                _tgProxyIsStartBool = !_tgProxyIsStartBool;
+                OnPropertyChanged(nameof(_tgProxyIsStartBool));
+                OnPropertyChanged(nameof(TgProxyIsStart));
+            }
+        }
+        #endregion
         #endregion
 
         ZapretController controller = new("");
         ConfigEngine configEngine = new();
         public MainViewModel()
         {
+            _proxyService = new TcpServerService();
             #region Config
             appConfig = configEngine.LoadConfig();
             _autoConnect = appConfig.AutoConnect;
             _autoStartUp = appConfig.StartUpWithSystem;
             _autoRestartIfError = appConfig.AutoRestartIfError;
+            _tgProxyAutoStart = appConfig.AutoStartTGProxy;
 
             SetStartUp = new RelayCommand(o =>
             {
@@ -132,6 +177,11 @@
                 }
             });
 
+            SetAutoStartTGProxy = new RelayCommand(o =>
+            {
+                configEngine.SetAutoStartTGProxy(TgProxyAutoStart, appConfig);
+            });
+
             if (AutoConnect)
             {
                 _selectedConfig = appConfig.LastConfig;
@@ -142,17 +192,24 @@
                 controller.Start();
                 CurrentStatus = "Запущено";
             }
+
+            if (TgProxyAutoStart)
+            {
+                StartServer();
+            }
             #endregion
 
             ConnectionsVM = new ConnectionsViewModel();
             LogsVM = new LogsViewModel();
             SettingsVM = new SettingsViewModel();
+            TGProxyVM = new TGProxyViewModel();
             DonateVM = new DonateViewModel();
 
             CurrentView = ConnectionsVM;
 
             Configs = Helper.Configs;
 
+            #region Zapret
             StartZapret = new RelayCommand(o =>
             {
                 Helper.CheckDriver();
@@ -200,7 +257,14 @@
                     Helper.ShowMessage("Конфиг перезапущен!");
                 }
             });
+            #endregion
 
+            #region TG
+            StartTgProxy = new RelayCommand(o => { StartServer(); });
+            StopTgProxy = new RelayCommand(o => { StopServer(); });
+            #endregion
+
+            #region Панели
             ConnectVC = new RelayCommand(o =>
             {
                 CurrentView = ConnectionsVM;
@@ -216,12 +280,19 @@
                 CurrentView = SettingsVM;
             });
 
+            TGProxyVC = new RelayCommand(o =>
+            {
+                CurrentView = TGProxyVM;
+            });
+
             DonateVC = new RelayCommand(o =>
             {
                 CurrentView = DonateVM;
             });
+            #endregion
         }
 
+        #region Методы
         public void AddLogEntry(string message)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -251,8 +322,41 @@
                     CurrentStatus = "Запущено";
                 }
 
-                if (Logs.Count > 200) Logs.RemoveAt(0);
+                if (Logs.Count > 90) Logs.RemoveAt(0);
             });
         }
+
+        private async void StartServer()
+        {
+            if (!_tgProxyIsStartBool)
+            {
+                TgProxyIsStart = "Статус: Прокси запущен";
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                try
+                {
+                    await _proxyService.StartListeningAsync(_cancellationTokenSource.Token);
+                    Helper.ShowMessage("Прокси запущен!");
+                }
+                catch (Exception ex)
+                { MessageBox.Show(ex.Message); }
+                finally
+                {
+                    TgProxyIsStart = "Статус: Прокси не запущен";
+                    Helper.ShowMessage("Прокси был выключен!");
+                }
+            }
+        }
+
+        private void StopServer()
+        {
+            if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                Helper.ShowMessage("Прокси был выключен!");
+            }
+        }
+        #endregion
     }
 }

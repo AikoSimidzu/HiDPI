@@ -12,7 +12,15 @@
 
         public AppConfig LoadConfig()
         {
-            AppConfig _appConfig = new() { AutoConnect = false, StartUpWithSystem = false, AutoRestartIfError = false, LastConfig = new ConfigInfo { Name = string.Empty, ConfigPath = string.Empty } };
+            AppConfig _appConfig = new() 
+            { 
+                AutoConnect = false, 
+                StartUpWithSystem = false, 
+                AutoRestartIfError = false, 
+                AutoStartTGProxy = false, 
+                LastConfig = new ConfigInfo { Name = string.Empty, ConfigPath = string.Empty }
+            };
+            
             if (File.Exists(appCfgPath))
             {
                 string config = File.ReadAllText(appCfgPath);
@@ -49,6 +57,12 @@
         public void SetAutoRestartIfError(bool p, AppConfig config)
         {
             config.AutoRestartIfError = p;
+            Save(config);
+        }
+
+        public void SetAutoStartTGProxy(bool p, AppConfig config)
+        {
+            config.AutoStartTGProxy = p;
             Save(config);
         }
 

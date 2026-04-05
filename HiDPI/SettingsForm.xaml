@@ -9,7 +9,7 @@
              Background="#01FFFFFF"
              Loaded="UserControl_Loaded">
 
-    <Grid RowDefinitions="30, 30, 30, *, 40" ColumnDefinitions="*, *, *">
+    <Grid RowDefinitions="30, 30, 30, 30, *, 40" ColumnDefinitions="*, *, *">
         <Label Content="Автозапуск" Foreground="White" FontSize="13"/>
         <CheckBox Margin="0 0 40 0" Command="{Binding DataContext.SetStartUp, RelativeSource={RelativeSource AncestorType=Window }}" IsChecked="{Binding DataContext.AutoStartUp, RelativeSource={RelativeSource AncestorType=Window }}" Foreground="White"/>
 
@@ -19,8 +19,13 @@
         <Label Grid.Row="2" Content="Автоматически перезапускать Zapret2 при ошибках" Foreground="White" Grid.ColumnSpan="2" FontSize="13"/>
         <CheckBox Grid.Row="2" Command="{Binding DataContext.SetAutoRestartIfError, RelativeSource={RelativeSource AncestorType=Window }}" IsChecked="{Binding DataContext.AutoRestartIfError, RelativeSource={RelativeSource AncestorType=Window }}" Grid.Column="1" Width="50" Foreground="White" Margin="0 0 50 0"/>
 
-        <Label x:Name="VersionNow" Grid.Row="4" Foreground="White" FontSize="15" FontWeight="DemiBold" Content="Текущая версия: "/>
-        <Label x:Name="ActualVersion" Grid.Row="4" Foreground="White" FontSize="15" FontWeight="DemiBold" Grid.Column="1" Content="Актуальная версия: "/>
-        <Button x:Name="Update" Click="Update_Click" Grid.Row="4" Grid.Column="2" Content="Обновить" FontSize="15" FontWeight="DemiBold" Width="200" Height="40"/>
+        <Label Grid.Row="3" Content="Автоматически запускать TG прокси" Foreground="White" FontSize="13"/>
+        <CheckBox Grid.Row="3" Grid.Column="1" Width="50" Foreground="White" Command="{Binding DataContext.SetAutoStartTGProxy, RelativeSource={RelativeSource AncestorType=Window }}" IsChecked="{Binding DataContext.TgProxyAutoStart, RelativeSource={RelativeSource AncestorType=Window }}" HorizontalAlignment="Left"/>
+
+        <Grid ColumnDefinitions="*, *, *" Grid.Row="5" Grid.ColumnSpan="3">
+            <Label x:Name="VersionNow" Grid.Row="4" Foreground="White" FontSize="15" FontWeight="DemiBold" Content="Текущая версия: "/>
+            <Label x:Name="ActualVersion" Grid.Row="4" Foreground="White" FontSize="15" FontWeight="DemiBold" Grid.Column="1" Content="Актуальная версия: "/>
+            <Button x:Name="Update" Click="Update_Click" Grid.Row="4" Grid.Column="2" Content="Обновить" FontSize="15" FontWeight="DemiBold" Width="200" Height="40"/>
+        </Grid>        
     </Grid>
 </UserControl>
