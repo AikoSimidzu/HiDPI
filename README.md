@@ -1,10 +1,10 @@
 # HiDPI
-Анти DPI с zapret2
+[Анти DPI с zapret2](https://github.com/AikoSimidzu/HiDPI/releases/download/V1.1.1/HiDPI.zip)
 
 ![alt text](Screenshots/hidpi.png "Logo")
 
 # TgProxy
-Это локальный MTProto прокси для Telegram.
+[TGProxy-](https://github.com/AikoSimidzu/HiDPI/releases/download/V1.1.1/TGProxy.apk) это локальный MTProto прокси для Telegram.
 - ROOT прав не требует!
 TG без тормозов, ура!
 
@@ -32,6 +32,10 @@ TG без тормозов, ура!
 Все конфиги находятся в папке configs.
 
 **Для работы программы необходим [.NET 10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)**
+
+# VT (Результаты сканирования антивирусами)
+- [HiDPI](https://www.virustotal.com/gui/file/8d4580a5946f1e1a6547e188d79fcdbe28d9ce60562c18bb3a99692f44ba3680?nocache=1)
+- [TGProxy](https://www.virustotal.com/gui/file/8ca2ce6fe5933e64fe1de37f7ff6665459e5f622fdc3801517543a2bdae59a62?nocache=1)
 
 # Ресурсы
 ## Движок
