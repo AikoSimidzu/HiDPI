@@ -3,6 +3,11 @@
 
 ![alt text](Screenshots/hidpi.png "Logo")
 
+# TgProxy
+Это локальный MTProto прокси для Telegram.
+- ROOT прав не требует!
+TG без тормозов, ура!
+
 # Функционал
 -Автозапуск
 
