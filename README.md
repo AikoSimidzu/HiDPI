@@ -35,7 +35,7 @@ TG без тормозов, ура!
 
 # VT (Результаты сканирования антивирусами)
 - [HiDPI](https://www.virustotal.com/gui/file/8d4580a5946f1e1a6547e188d79fcdbe28d9ce60562c18bb3a99692f44ba3680?nocache=1)
-- [TGProxy](https://www.virustotal.com/gui/file/8ca2ce6fe5933e64fe1de37f7ff6665459e5f622fdc3801517543a2bdae59a62?nocache=1)
+- [TGProxy](https://www.virustotal.com/gui/file/de90b8c153814564d67d1fa1c37ae7382d02c2cdea3e8a3c381628eb8a664b6b?nocache=1))
 
 # Ресурсы
 ## Движок
