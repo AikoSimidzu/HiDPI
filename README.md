@@ -1,6 +1,8 @@
 # HiDPI
 [Анти DPI с zapret2](https://github.com/AikoSimidzu/HiDPI/releases/download/V1.1.1/HiDPI.zip)
 
+HiDPI- это GUI обертка Zapret2 с некоторыми фичами, созданная для упрощенного обхода блокировок.
+
 ![alt text](Screenshots/hidpi.png "Logo")
 
 # TgProxy
