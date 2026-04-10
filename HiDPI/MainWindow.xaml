@@ -7,7 +7,7 @@
         xmlns:viewModel="clr-namespace:HiDPI.MVVM.ViewModel"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="500" Width="800"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="#01FFFFFF"
@@ -23,7 +23,7 @@
     <Border Background="#121111" BorderThickness="1" BorderBrush="#2d2d2d" CornerRadius="13">
         <Grid RowDefinitions="25, *, 22" ColumnDefinitions="5, 50, *, 25, 25, 5">
             <Grid>
-                <tb:TaskbarIcon x:Name="HiDPIIcon" TrayMouseDoubleClick="HiDPIIcon_TrayMouseDoubleClick" Visibility="Collapsed" ToolTipText="HiDPI"
+                <tb:TaskbarIcon x:Name="HiDPIIcon" TrayMouseDoubleClick="HiDPIIcon_TrayMouseDoubleClick" Visibility="Visible" ToolTipText="HiDPI"
                     xmlns:tb="http://www.hardcodet.net/taskbar" IconSource="/Resources/HiDPI.ico"                    
                     LeftClickCommand="{Binding ShowWindowCommand}" DoubleClickCommand="{Binding ShowWindowCommand}">
                     <tb:TaskbarIcon.ContextMenu>
@@ -40,22 +40,27 @@
             <Button x:Name="ToTray" Click="ToTray_Click" Content="X" FontWeight="Bold" Grid.Column="4" Width="25" Height="25"/>
             <Button x:Name="Minimize" Click="Minimize_Click" Content="-" FontWeight="Bold" Grid.Column="3" Width="25" Height="25"/>
 
-            <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="50, 50, 50, 50, *">
+            <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="50, 50, 50, 50, 50, 50, *">
                 <Button Width="40" Height="40" Command="{Binding ConnectVC}">
                     <Image Source="/Resources/technology.png"/>
                 </Button>
                 <Button Width="40" Height="40" Command="{Binding LogsVC}" Grid.Row="1">
                     <Image Source="/Resources/files.png"/>
                 </Button>
-                <Button Width="40" Height="40" Command="{Binding DonateVC}" Grid.Row="2">
-                    <Image Source="/Resources/donate.png"/>
+
+                <Button Width="40" Height="40" Command="{Binding PingVC}" VerticalAlignment="Bottom" Grid.Row="2">
+                    <Image Source="/Resources/ping.png"/>
                 </Button>
 
                 <Button Width="40" Height="40" Command="{Binding TGProxyVC}" Grid.Row="3" >
                     <Image Source="/Resources/telegram.png"/>
                 </Button>
-                
-                <Button Width="40" Height="40" Command="{Binding SettingsVC}" VerticalAlignment="Bottom" Grid.Row="4">
+
+                <Button Width="40" Height="40" Command="{Binding DonateVC}" Grid.Row="4">
+                    <Image Source="/Resources/donate.png"/>
+                </Button>
+
+                <Button Width="40" Height="40" Command="{Binding SettingsVC}" VerticalAlignment="Bottom" Grid.Row="6">
                     <Image Source="/Resources/setting.png"/>
                 </Button>
             </Grid>

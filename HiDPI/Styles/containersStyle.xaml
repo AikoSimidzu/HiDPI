@@ -13,12 +13,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border x:Name="Bd" 
-                                CornerRadius="10"
-                                Background="{TemplateBinding Background}" 
-                                BorderBrush="#363434"
-                                BorderThickness="1" 
-                                Padding="5" 
-                                SnapsToDevicePixels="true">
+                            CornerRadius="10"
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="#363434"
+                            BorderThickness="1" 
+                            Padding="5" 
+                            SnapsToDevicePixels="true">
                         <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Border>
 
@@ -30,7 +30,20 @@
                             <Setter TargetName="Bd" Property="Background" Value="#333333"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
+
+                        <DataTrigger Binding="{Binding IsSuccess}" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="#4EC9B0"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IsSuccess}" Value="False">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="#FF6B6B"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding IsTest}" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="#F5DD27"/>
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

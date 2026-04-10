@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HiDPI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#01FFFFFF">
+             Background="#121111">
     
     <Grid RowDefinitions="*, 50, 30">
         <Image x:Name="image" Source="/Resources/senkoMain.png"/>

@@ -15,6 +15,7 @@
     <None Remove="Resources\donate.png" />
     <None Remove="Resources\files.png" />
     <None Remove="Resources\HiDPI.ico" />
+    <None Remove="Resources\ping.png" />
     <None Remove="Resources\senkoMain.png" />
     <None Remove="Resources\senkoThx.jpg" />
     <None Remove="Resources\senkoThx.png" />
@@ -37,6 +38,7 @@
     <Resource Include="Resources\donate.png" />
     <Resource Include="Resources\files.png" />
     <Resource Include="Resources\HiDPI.ico" />
+    <Resource Include="Resources\ping.png" />
     <Resource Include="Resources\senkoMain.png" />
     <Resource Include="Resources\senkoThx.png" />
     <Resource Include="Resources\setting.png" />

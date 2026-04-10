@@ -103,9 +103,14 @@
                 _winwsProcess.ErrorDataReceived += (s, e) => Log(e.Data);
                 _winwsProcess.Exited += (s, e) =>
                 {
-                    if (_winwsProcess != null)
+                    var process = s as Process;
+                    if (process != null)
                     {
-                        Log($"[СИСТЕМА] winws завершён. Код: {_winwsProcess.ExitCode}");
+                        try
+                        {
+                            Log($"[СИСТЕМА] winws завершён. Код: {_winwsProcess.ExitCode}");
+                        }
+                        catch { }
                         OnProcessExited?.Invoke();
                     }
                 };
@@ -125,7 +130,7 @@
             if (_winwsProcess != null && !_winwsProcess.HasExited)
             {
                 _winwsProcess.Kill();
-                _winwsProcess.WaitForExit(200);
+                _winwsProcess.WaitForExit(650);
                 _winwsProcess.Dispose();
                 _winwsProcess = null;
                 Log("[СИСТЕМА] Процесс остановлен.\n");

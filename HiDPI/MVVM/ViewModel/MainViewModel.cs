@@ -1,8 +1,6 @@
 ﻿namespace HiDPI.MVVM.ViewModel
 {
     using System.Collections.ObjectModel;
-    using System.Net;
-    using System.Net.Sockets;
     using System.Windows;
     using HiDPI.BackEnd;
     using HiDPI.BackEnd.TG;
@@ -12,6 +10,7 @@
     {
         #region Бинды
         public ObservableCollection<LogMessage> Logs { get; } = new ObservableCollection<LogMessage>();
+        public ObservableCollection<DomainInfo> PingLogs { get; } = new ObservableCollection<DomainInfo>();
         public ObservableCollection<ConfigInfo> Configs { get; set; }
 
         private readonly ITcpServerService _proxyService;
@@ -34,12 +33,14 @@
         public RelayCommand SettingsVC { get; set; }
         public RelayCommand DonateVC { get; set; }
         public RelayCommand TGProxyVC { get; set; }
+        public RelayCommand PingVC { get; set; }
 
         public ConnectionsViewModel ConnectionsVM { get; set; }
         public LogsViewModel LogsVM { get; set; }
         public SettingsViewModel SettingsVM { get; set; }
         public DonateViewModel DonateVM { get; set; }
         public TGProxyViewModel TGProxyVM { get; set; }
+        public PingViewModel PingVM { get; set; }
         #endregion
 
         #region Команды
@@ -50,6 +51,11 @@
         public RelayCommand RestartZapret { get; set; }
         public RelayCommand SetAutoConnect { get; set; }
         public RelayCommand SetAutoRestartIfError { get; set; }
+        #endregion
+
+        #region Ping
+        public RelayCommand StartPing { get; set; }
+        public RelayCommand StartPingAllCfg { get; set; }
         #endregion
 
         #region TG
@@ -195,7 +201,9 @@
 
             if (TgProxyAutoStart)
             {
+                AddLogEntry("[СИСТЕМА] Автозапуск Telegram Proxy...");
                 StartServer();
+                AddLogEntry("[СИСТЕМА] Telegram Proxy запущен.");
             }
             #endregion
 
@@ -204,6 +212,7 @@
             SettingsVM = new SettingsViewModel();
             TGProxyVM = new TGProxyViewModel();
             DonateVM = new DonateViewModel();
+            PingVM = new PingViewModel();
 
             CurrentView = ConnectionsVM;
 
@@ -259,9 +268,20 @@
             });
             #endregion
 
+            #region Ping
+            StartPing = new RelayCommand(async(o) => await RunPingTest());
+            StartPingAllCfg = new RelayCommand(async (o) => 
+            {
+                PingLogs.Clear();
+                AddLogEntry("[СИСТЕМА] Запущена проверка пинга всех конфигов...");
+                await RunPingTest(true);
+                AddLogEntry("[СИСТЕМА] Проверка пинга завершена!");
+            });
+            #endregion
+
             #region TG
-            StartTgProxy = new RelayCommand(o => { StartServer(); });
-            StopTgProxy = new RelayCommand(o => { StopServer(); });
+            StartTgProxy = new RelayCommand(o => { StartServer(); AddLogEntry("[СИСТЕМА] Telegram Proxy запущен."); });
+            StopTgProxy = new RelayCommand(o => { StopServer(); AddLogEntry("[СИСТЕМА] Telegram Proxy остановлен."); });
             #endregion
 
             #region Панели
@@ -289,13 +309,18 @@
             {
                 CurrentView = DonateVM;
             });
+
+            PingVC = new RelayCommand(o => 
+            {
+                CurrentView = PingVM;
+            });
             #endregion
         }
 
         #region Методы
         public void AddLogEntry(string message)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 string type = "Info";
                 if (message.Contains("[ОШИБКА]") || message.Contains("cannot apply dupsid tls mod. payload is not valid tls."))
@@ -322,10 +347,93 @@
                     CurrentStatus = "Запущено";
                 }
 
-                if (Logs.Count > 90) Logs.RemoveAt(0);
+                if (Logs.Count > 750) Logs.RemoveAt(0);
             });
         }
 
+        #region Ping
+        public async Task RunPingTest(bool TestAllConfigs = false)
+        {
+            Network network = new Network();
+
+            if (!TestAllConfigs)
+            {
+                Application.Current.Dispatcher.Invoke(() => PingLogs.Clear());
+
+                List<DomainInfo> results = await network.CheckDomainsAsync(InternalData.Domains);
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    PingLogs.Add(new DomainInfo { Name = string.Concat("Тестируем ", _selectedConfig.Name, " конфиг"), IsTest = true });
+                    foreach (var domain in results)
+                    {
+                        PingLogs.Add(domain);
+                    }
+                });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() => 
+                { 
+                    PingLogs.Clear();
+                    PingLogs.Add(new DomainInfo { Name = "Запуск массового теста", IsTest = true });
+                });
+
+                foreach (ConfigInfo cfg in Configs)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        PingLogs.Add(new DomainInfo { Name = string.Concat("Тестируем ", cfg.Name, " конфиг"), IsTest = true });
+                    });
+
+                    if (controller != null)
+                    {
+                        if (controller.IsRunning)
+                        {
+                            controller.Stop();
+                        }
+                        controller.Dispose();
+                        Helper.CheckDriver();
+                    }
+
+                    controller = new ZapretController(cfg.ConfigPath);
+                    controller.OnLogReceived += (msg) => AddLogEntry(msg);
+                    controller.Start();
+
+                    // Время для запуска winws
+                    await Task.Delay(3000);
+
+                    List<DomainInfo> results = await network.CheckDomainsAsync(InternalData.Domains, 1250);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        foreach (var domain in results)
+                        {
+                            PingLogs.Add(domain);
+                        }
+                    });
+                }
+
+                if (controller != null)
+                {
+                    if (controller.IsRunning)
+                    {
+                        controller.Stop();
+                    }
+                    controller.Dispose();
+                    Helper.CheckDriver();
+                }
+
+                controller = new ZapretController(_selectedConfig.ConfigPath);
+                controller.OnLogReceived += (msg) => AddLogEntry(msg);
+                controller.Start();
+
+                PingLogs.Add(new DomainInfo { Name = "Тестирование завершено!", IsTest = true });
+                Helper.ShowMessage("Тестирование завершено!", "Вернули конфиг: " + _selectedConfig.Name);
+            }
+        }
+        #endregion
+
+        #region Прокси для телеги
         private async void StartServer()
         {
             if (!_tgProxyIsStartBool)
@@ -357,6 +465,7 @@
                 Helper.ShowMessage("Прокси был выключен!");
             }
         }
+        #endregion
         #endregion
     }
 }

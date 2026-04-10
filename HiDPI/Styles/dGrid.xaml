@@ -30,15 +30,20 @@
     </Style>
 
     <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+        <Setter Property="MinHeight" Value="40"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
                     <Grid x:Name="Grid">
                         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" 
                                        Height="Auto" Fill="Transparent"/>
-                        <Border x:Name="Rectangle1" CornerRadius="15 0 15 0" HorizontalAlignment="Stretch" 
-                                    VerticalAlignment="Stretch" Width="Auto" Height="Auto" 
-                                    Background="{TemplateBinding Background}"/>
+                        <Border x:Name="Rectangle1"
+                                CornerRadius="15 0 15 0"
+                                
+                                HorizontalAlignment="Stretch" 
+                                VerticalAlignment="Stretch" 
+                                Width="Auto" Height="Auto" 
+                                Background="{TemplateBinding Background}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Tag" Value="Horizontal">
@@ -60,7 +65,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
                     <Grid x:Name="GridRoot" Width="12" Background="{x:Null}">
-                        <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                        <Track x:Name="PART_Track" Margin="0, 5, 0, 35" ViewportSize="NaN" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
                             <Track.Thumb>
                                 <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}"/>
                             </Track.Thumb>

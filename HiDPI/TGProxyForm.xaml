@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HiDPI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#01FFFFFF">
+             Background="#121111">
     
     <Grid RowDefinitions="30, 30, 30, 40, 5, 40, *">
         <Label Content="IP: 127.0.0.1" Foreground="White" FontSize="13"/>

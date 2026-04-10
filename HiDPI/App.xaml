@@ -27,6 +27,10 @@
                 <local:SettingsForm/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewModel:PingViewModel}">
+                <local:PingForm/>
+            </DataTemplate>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/buttons.xaml"/>
                 <ResourceDictionary Source="/Styles/contextStyle.xaml"/>

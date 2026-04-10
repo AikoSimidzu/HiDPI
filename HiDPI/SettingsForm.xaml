@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HiDPI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="#01FFFFFF"
+             Background="#121111"
              Loaded="UserControl_Loaded">
 
     <Grid RowDefinitions="30, 30, 30, 30, *, 40" ColumnDefinitions="*, *, *">
