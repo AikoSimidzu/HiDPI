@@ -403,7 +403,15 @@
                     // Время для запуска winws
                     await Task.Delay(3000);
 
-                    List<DomainInfo> results = await network.CheckDomainsAsync(InternalData.Domains, 1250);
+                    var testDomains = InternalData.Domains.Select(d => new DomainInfo
+                    {
+                        Name = d.Name,
+                        Url = d.Url,
+                        ByTCP = d.ByTCP,
+                        Keyword = d.Keyword
+                    }).ToList();
+
+                    List<DomainInfo> results = await network.CheckDomainsAsync(testDomains, 1250);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         foreach (var domain in results)
