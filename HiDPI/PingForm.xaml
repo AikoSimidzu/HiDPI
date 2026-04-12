@@ -19,7 +19,7 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="2">
                         <TextBlock Text="{Binding Name}" Foreground="White" Margin="0,0,8,0" FontSize="11"/>
-                        <TextBlock Text="{Binding Ping}" x:Name="TxtBlock">
+                        <TextBlock Text="{Binding DisplayStatus}" x:Name="TxtBlock">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Style.Triggers>
